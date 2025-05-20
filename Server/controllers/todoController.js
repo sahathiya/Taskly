@@ -1,0 +1,68 @@
+const Todo=require("../models/Todo")
+
+
+const AddTodo=async(req,res)=>{
+    console.log("gyggggkkk");
+    
+    const{title,description,dueDate}=req.body
+
+    if(!title||!description||!dueDate){
+        return res.status(400).json({message:"all fields are required"})
+
+    }
+    
+    const todo=await Todo.create({
+        userId:req.user.id,
+        title,
+        description,
+        dueDate,
+        createdAt:Date.now()
+
+    })
+
+
+    res.status(200).json({message:"todo created",todo})
+}
+
+
+const RemoveTodo=async(req,res)=>{
+    const todoId=req.params.id
+    const todo=await Todo.findOne({where:{id:todoId}})
+    if(!todo){
+        return  res.status(404).json({message:"todo not found"})
+    }
+
+    await todo.destroy()
+
+    res.status(200).json({message:"todo removed"})
+
+
+}
+
+
+const EditTodo=async(req,res)=>{
+
+    const todoId=req.params.id
+    const{title,description,dueDate}=req.body
+    const todo=await Todo.findOne({where:{id:todoId}})
+     if(!todo){
+        return  res.status(404).json({message:"todo not found"})
+    }
+    await todo.update({
+        title:title||todo.title,
+        description:description||todo.description,
+        dueDate:dueDate||todo.dueDate
+    })
+
+    res.status(200).json({message:"todo updated"})
+
+}
+const AllTodo=async(req,res)=>{
+    const userId=req.user.id
+
+    const todos=await Todo.findAll({where:{userId:userId}})
+    res.status(200).json({message:"all todos",todos})
+
+}
+
+module.exports={AddTodo,RemoveTodo,AllTodo,EditTodo}
