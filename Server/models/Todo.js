@@ -16,6 +16,14 @@ const Todo = sequelize.define("Todo", {
       key: 'id'
     }
   },
+   categoryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'categories', 
+      key: 'id'
+    }
+  },
   title: {
     type: DataTypes.STRING
   },
@@ -24,6 +32,14 @@ const Todo = sequelize.define("Todo", {
   },
  dueDate: {
     type: DataTypes.DATEONLY  
+  },
+  status: {
+    type: DataTypes.ENUM("Pending", "Completed"),
+    defaultValue: "Pending"
+  },
+  priority: {
+    type: DataTypes.ENUM("high", "medium", "low"),
+    allowNull: false,
   },
   createdAt: {
     type: DataTypes.DATEONLY,
