@@ -1,27 +1,29 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
+import { fetchCategories } from '../features/category/categoryActions';
+import axiosInstance from '../utils/axiosInstance';
 
 function CategoryModal({onClose}) {
      const dispatch = useDispatch();
   const [categoryName, setCategoryName] = useState("");
 
-//   const handleAdd = async () => {
-//     if (categoryName.trim()) {
-//       const response = await axiosInstance.post(`/api/product/category/add`, {
-//         name: categoryName,
-//       });
-//       if (response.status === 200) {
-//         setCategoryName("");
-//         dispatch(fetchCategories());
-//         onClose();
-//       }
-//     }
-//   };
+  const handleAdd = async () => {
+    if (categoryName.trim()) {
+      const response = await axiosInstance.post(`/api/todo/category/add`, {
+        name: categoryName,
+      });
+      if (response.status === 200) {
+        setCategoryName("");
+        dispatch(fetchCategories());
+        onClose();
+      }
+    }
+  };
 
-//   const handleDiscard = () => {
-//     setCategoryName("");
-//     onClose();
-//   };
+  const handleDiscard = () => {
+    setCategoryName("");
+    onClose();
+  };
   return (
       <div className="font-poppins fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex justify-center items-center px-4">
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md relative animate-fade-in">
@@ -46,14 +48,14 @@ function CategoryModal({onClose}) {
 
         <div className="flex space-x-4 mt-8">
           <button
-            // onClick={handleAdd}
+            onClick={handleAdd}
             className="w-1/2 bg-primary text-white py-2 rounded-lg hover:bg-secondary-dark transition"
           >
             ADD
           </button>
 
           <button
-            // onClick={handleDiscard}
+            onClick={handleDiscard}
             className="w-1/2 bg-gray-200 text-primary py-2 rounded-lg hover:bg-gray-300 transition"
           >
             DISCARD

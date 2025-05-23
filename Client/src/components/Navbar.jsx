@@ -1,18 +1,33 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
+import axiosInstance from '../utils/axiosInstance';
+import { setUserLogout } from '../features/user/userSlice';
+import { toast } from 'react-toastify';
 function Navbar() {
     const navigate=useNavigate()
     const activeUser=useSelector((state)=>state.user.activeUser)
-   
+   const dispatch=useDispatch()
 
-      const handleLogout=async()=>{
-          await signOut(auth)
-          navigate("/")
+      // const handleLogout=async()=>{
+      //     await signOut(auth)
+      //     navigate("/")
     
-        }
+      //   }
+
+
+      const handleLogout = async (e) => {
+    e.preventDefault();
+    const response = await axiosInstance.post("/api/user/logout");
+    console.log("resposne of user logout", response);
+    if (response.status === 200) {
+      dispatch(setUserLogout());
+      toast.success(response.data.message);
+      navigate("/");
+    }
+  };
   return (
      <nav className="fixed w-full z-20 top-0 start-0  bg-primary border-gray-200 font-poppins">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between p-4">
@@ -38,7 +53,7 @@ function Navbar() {
             
            ):(
              <button
-            onClick={()=>navigate("/dashboard")}
+            onClick={()=>navigate("/signin")}
               
               className="hover:text-secondary transition text-sm font-semibold"
             >

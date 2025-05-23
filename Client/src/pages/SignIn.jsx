@@ -1,12 +1,35 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from 'yup'
 import { LuUser } from "react-icons/lu";
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
 import google from "../assets/png/google.png"
+import axiosInstance from '../utils/axiosInstance';
+import { setActiveUser } from '../features/user/userSlice';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 function SignIn() {
      const navigate=useNavigate()
+     const dispatch=useDispatch()
+ const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+  });
+      const handleSubmit = async (values) => {
+    console.log("values", values);
+
+    const response = await axiosInstance.post(`/api/user/login`, values);
+
+    console.log("response of register", response);
+    const user = response.data.user;
+    dispatch(setActiveUser(user));
+    toast.success(response.data.message);
+    navigate("/dashboard");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white font-poppins">
@@ -19,12 +42,11 @@ function SignIn() {
     
               <Formik
                 initialValues={{
-                  name: "",
                   email: "",
                   password: "",
                 }}
-                // validationSchema={validationSchema}
-                // onSubmit={handleSubmit}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
               >
                 {({ isSubmitting }) => (
                   <Form className="w-full max-w-sm">

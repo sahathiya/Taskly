@@ -93,30 +93,38 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Home, Menu } from "lucide-react";
 import { CiLogout } from "react-icons/ci";
 import { IoAdd } from 'react-icons/io5';
 import CategoryModal from './CategoryModal';
-// import { setlogoutUser } from 'your-slice';
+import { FaHome } from "react-icons/fa";
+import { fetchCategories } from '../features/category/categoryActions';
+
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
   const[categoryModal,setCategoryModal]=useState(false)
   const activeUser = useSelector((state) => state.user.user);
+  const categories=useSelector((state)=>state.category.categories)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const navItems = [
-    { label: "Home", icon: Home, link: '/dashboard' },
-    // Add more items as needed
+    { label: "Home", icon: FaHome, link: '/dashboard' },
+    
   ];
 
+
+  useEffect(()=>{
+    dispatch(fetchCategories())
+
+  },[dispatch])
   return (
-    <div className="font-nunito ml-20 mt-6 lg:ml-10 lg:mt-10">
-      <div className={`bg-white h-[90vh]  flex flex-col justify-between border border-primary rounded-md shadow-md overflow-hidden transition-all duration-300 ${isOpen ? "w-60" : "w-16"} relative`}>
+    <div className="font-nunito ml-20 mt-10 lg:ml-10 ">
+      <div className={`bg-white h-[80vh]  flex flex-col justify-between border border-primary rounded-md shadow-md overflow-hidden transition-all duration-300 ${isOpen ? "w-60" : "w-16"} relative`}>
         
         {/* Top Section */}
         <div>
@@ -139,9 +147,9 @@ function Sidebar() {
               <div
                 key={label}
                 onClick={() => navigate(link)}
-                className="group flex items-center p-2 rounded-md hover:bg-primary hover:text-white cursor-pointer transition"
+                className="group flex items-center p-2 rounded-md bg-primary text-white cursor-pointer transition"
               >
-                <Icon className="w-5 h-5 text-gray-700 group-hover:text-white" />
+                <Icon className="w-5 h-5 text-white" />
                 {isOpen && <span className="ml-3 text-sm">{label}</span>}
                 {!isOpen && (
                   <span className="absolute left-full ml-2 whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition">
@@ -151,7 +159,23 @@ function Sidebar() {
               </div>
             ))}
           </nav>
-
+ <nav className="flex flex-col gap-2 px-2">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+              
+                className="group flex items-center p-2 rounded-md  cursor-pointer transition"
+              >
+               
+                {isOpen && <span className="ml-3 text-sm">{category.name}</span>}
+                {!isOpen && (
+                  <span className="absolute left-full ml-2 whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition">
+                    {category.name}
+                  </span>
+                )}
+              </div>
+            ))}
+          </nav>
         
         </div>
 
