@@ -1,6 +1,6 @@
 const sequelize=require('../config/db')
 const { DataTypes } = require("sequelize");
-
+const Category=require("../models/Category")
 
 const Todo = sequelize.define("Todo", {
   id: {
@@ -16,19 +16,15 @@ const Todo = sequelize.define("Todo", {
       key: 'id'
     }
   },
-   categoryId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'categories', 
-      key: 'id'
-    }
-  },
+   
   title: {
     type: DataTypes.STRING
   },
   description: {
     type: DataTypes.STRING
+  },
+  category: {
+     type: DataTypes.STRING,
   },
  dueDate: {
     type: DataTypes.DATEONLY  
@@ -39,7 +35,7 @@ const Todo = sequelize.define("Todo", {
   },
   priority: {
     type: DataTypes.ENUM("high", "medium", "low"),
-    allowNull: false,
+    
   },
   createdAt: {
     type: DataTypes.DATEONLY,
@@ -50,4 +46,7 @@ const Todo = sequelize.define("Todo", {
   timestamps: false  
 });
 
+// Todo.belongsTo(Category, {
+//   foreignKey: 'categoryId'
+// });
 module.exports = Todo;
