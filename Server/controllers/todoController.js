@@ -100,4 +100,52 @@ const AllTodo=async(req,res)=>{
 
 }
 
-module.exports={AddTodo,RemoveTodo,AllTodo,EditTodo,CompleteTodo,TodoById}
+
+
+const SortBasedonDate=async(req,res)=>{
+
+const {date}=req.body
+  if (!date) {
+      return res.status(400).json({ message: "Date is required" });
+    }
+
+    const todos = await Todo.findAll({
+      where: {
+        dueDate: date
+      },
+      order: [['createdAt', 'DESC']] // You can change sorting field and order
+    });
+
+    res.status(200).json(todos);
+
+
+}
+
+const CurrentDateTodo=async(req,res)=>{
+
+    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+    const todos = await Todo.findAll({
+      where: {
+        dueDate: today
+      },
+      order: [['createdAt', 'DESC']] // Optional: sort by priority, etc.
+    });
+
+    res.status(200).json(todos);
+
+}
+
+
+const TodoByCategory=async(req,res)=>{
+    const {category}=req.body
+
+    const todos=await Todo.findAll({where:{category:category}})
+    if(!todos){
+         return  res.status(404).json({message:"todos not found"})
+    }
+
+
+      res.status(200).json({message:"todos",todos})
+}
+module.exports={AddTodo,RemoveTodo,AllTodo,EditTodo,CompleteTodo,TodoById,SortBasedonDate,CurrentDateTodo,TodoByCategory}

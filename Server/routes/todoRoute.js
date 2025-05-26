@@ -1,5 +1,5 @@
 const express=require('express')
-const { AddTodo, RemoveTodo, AllTodo, EditTodo, CompleteTodo, TodoById } = require('../controllers/todoController')
+const { AddTodo, RemoveTodo, AllTodo, EditTodo, CompleteTodo, TodoById, SortBasedonDate, CurrentDateTodo, TodoByCategory } = require('../controllers/todoController')
 const tryCatch = require('../middlewares/tryCatch')
 const { userAuthMiddleware } = require('../middlewares/userAuthMiddleware')
 const { AddCategory, RemoveCategory, EditCategory, AllCategory } = require('../controllers/categoryController')
@@ -16,6 +16,15 @@ todoRoute
 .delete('/remove/:id',tryCatch(RemoveTodo))
 .patch('/edit/:id',tryCatch(EditTodo))
 .get('/all',userAuthMiddleware,tryCatch(AllTodo))
+
+//sort
+.get('/sort/date',tryCatch(SortBasedonDate))
+.get('/sort/currentdate',tryCatch(CurrentDateTodo))
+
+
+//categorybased
+.get('/category/type',tryCatch(TodoByCategory))
+
 
 //category
 
