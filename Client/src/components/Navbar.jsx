@@ -6,6 +6,7 @@ import { signOut } from 'firebase/auth';
 import axiosInstance from '../utils/axiosInstance';
 import { setUserLogout } from '../features/user/userSlice';
 import { toast } from 'react-toastify';
+import { LiaSignOutAltSolid } from "react-icons/lia";
 function Navbar() {
     const navigate=useNavigate()
     const activeUser=useSelector((state)=>state.user.activeUser)
@@ -48,7 +49,7 @@ function Navbar() {
               
               className="hover:text-secondary transition text-sm font-semibold"
             >
-              Sign out
+             <LiaSignOutAltSolid className='text-xl'/>
             </button>
             
            ):(

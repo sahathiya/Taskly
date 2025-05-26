@@ -2,11 +2,16 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { fetchCategories } from '../features/category/categoryActions';
 import axiosInstance from '../utils/axiosInstance';
-
+import Picker from "emoji-picker-react";
 function CategoryModal({onClose}) {
      const dispatch = useDispatch();
   const [categoryName, setCategoryName] = useState("");
+const [chosenEmoji, setChosenEmoji] = useState(null);
 
+    const onEmojiClick = (event, emojiObject) => {
+        setChosenEmoji(emojiObject);
+        console.log(emojiObject.target);
+    };
   const handleAdd = async () => {
     if (categoryName.trim()) {
       const response = await axiosInstance.post(`/api/todo/category/add`, {
@@ -37,7 +42,21 @@ function CategoryModal({onClose}) {
         <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
           Add Category
         </h2>
-
+  <div>
+           
+            {chosenEmoji ? (
+                <span>
+                    Your Emoji:
+                    <img
+                        style={{ width: "15px" }}
+                        src={chosenEmoji.target.src}
+                    />
+                </span>
+            ) : (
+                <span>No Emoji</span>
+            )}
+            <Picker onEmojiClick={onEmojiClick} />
+        </div>
         <input
           type="text"
           value={categoryName}
