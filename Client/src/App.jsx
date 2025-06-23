@@ -7,17 +7,19 @@ import SignIn from './pages/SignIn'
 import Home from './pages/Home'
 import Landing from './pages/Landing'
 import {ToastContainer} from "react-toastify"
+import TaskDetailsModal from './components/TaskDetailsModal'
 function App() {
 
 
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
  <Routes>
-  <Route path='/' element={<Landing/>}/>
+  {/* <Route path='/' element={<Landing/>}/> */}
   <Route path='/signup' element={<SignUp/>}/>
   <Route path='/signin' element={<SignIn/>}/>
-  <Route path='/dashboard' element={<Home/>}/>
+  <Route path='/' element={<Home/>}/>
+  <Route path='/modal' element={<TaskDetailsModal/>}/>
  
  </Routes>
    

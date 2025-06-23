@@ -4,9 +4,11 @@ import { fetchTodobyId, fetchTodos } from "../features/todo/todoActions";
 import { Clock, MoreVertical } from "lucide-react";
 import { setisEdit, setshowAddModal, setTodos } from "../features/todo/todoSlice";
 import axiosInstance from "../utils/axiosInstance";
-import { FaSort } from "react-icons/fa";
+import TaskDetailsModal from "./TaskDetailsModal";
+
 function TodoLists() {
   const [dropdown, setDropdown] = useState(null);
+  const[showModal,setShowModal]=useState(false)
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todo.todos);
   useEffect(() => {
@@ -21,6 +23,7 @@ function TodoLists() {
  if(response.status===200){
 dispatch(setTodos(todoId))
 dispatch(fetchTodos())
+setDropdown(null)
  }
 
 
@@ -46,6 +49,16 @@ dispatch(fetchTodos())
      await  dispatch(fetchTodobyId(todoId))
     
 dispatch(setshowAddModal(true))
+  }
+
+
+  const handleTodo=(todoId)=>{
+   
+     setShowModal(true)
+ 
+   dispatch(fetchTodobyId(todoId))
+
+     
   }
   return (
     <div className="max-w-2xl mx-auto  space-y-4">
@@ -83,7 +96,7 @@ dispatch(setshowAddModal(true))
             <div className="flex items-center text-gray-500 text-sm space-x-2">
   <div className={`${todo.status==='Pending'? 'bg-[#f5aa42]':'bg-[#218034]' } rounded-full w-2 h-2`} /> {/* dot */}
   <Clock className="w-4 h-4" />
-  <span>{todo.dueDate}</span>
+  <span>{todo.time}</span>
 </div>
 
            
@@ -98,7 +111,7 @@ dispatch(setshowAddModal(true))
       id="dropdownNavbar"
       className="absolute top-full right-0 mt-2 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 border border-primary"
     >
-      <ul className="py-2 text-sm text-gray-700">
+      <ul className=" py-2 text-sm text-gray-700">
         <li>
           <button
            onClick={()=>handleEdit(todo.id)}
@@ -113,6 +126,18 @@ dispatch(setshowAddModal(true))
             Delete
           </button>
         </li>
+
+         <li>
+          <button 
+           onClick={()=>handleTodo(todo.id)}
+           className="block px-4 py-2 hover:bg-gray-100">
+            Open
+          </button>
+        </li>
+
+        {showModal&&(
+          <TaskDetailsModal onClose={()=>setShowModal(false)}/>
+        )}
       </ul>
     </div>
   )}

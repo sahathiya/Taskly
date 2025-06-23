@@ -33,12 +33,12 @@ function SignUp() {
     const user = response.data.user;
     dispatch(setActiveUser(user));
     toast.success(response.data.message);
-    navigate("/dashboard");
+    navigate("/");
   };
 
     const handleSignIn=async()=>{
     await signInWithPopup(auth,googleProvider)
-    navigate("/dashboard")
+    navigate("/")
 
     }
   return (

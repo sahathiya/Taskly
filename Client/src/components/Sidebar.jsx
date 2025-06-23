@@ -102,7 +102,8 @@ import { IoAdd } from 'react-icons/io5';
 import CategoryModal from './CategoryModal';
 import { FaHome } from "react-icons/fa";
 import { fetchCategories } from '../features/category/categoryActions';
-
+import { CiCircleRemove } from "react-icons/ci";
+import axiosInstance from '../utils/axiosInstance';
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -113,7 +114,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   const navItems = [
-    { label: "Home", icon: FaHome, link: '/dashboard' },
+    { label: "Home", icon: FaHome, link: '/' },
     
   ];
 
@@ -122,6 +123,19 @@ function Sidebar() {
     dispatch(fetchCategories())
 
   },[dispatch])
+
+
+
+  const handleRemoveCategory=async(categoryId)=>{
+    console.log("categoryId",categoryId);
+    
+    const response=await axiosInstance.delete(`/api/todo/category/remove/${categoryId}`)
+    console.log("response of remove category",response);
+    dispatch(fetchCategories())
+
+
+
+  }
   return (
     <div className="font-nunito ml-20 mt-10 lg:ml-10 ">
       <div className={`bg-white h-[80vh]  flex flex-col justify-between border border-primary rounded-md shadow-md overflow-hidden transition-all duration-300 ${isOpen ? "w-60" : "w-16"} relative`}>
@@ -167,9 +181,14 @@ function Sidebar() {
                 className="group flex items-center p-2 rounded-md  cursor-pointer transition"
               >
                
-                {isOpen && <span className="ml-3 text-sm">{category.name}</span>}
+                {isOpen && <div 
+
+                className="flex  space-x-2 hover:bg-blue-100 w-full rounded-md">
+                  <button onClick={()=>handleRemoveCategory(category.id)}><CiCircleRemove className='text-primary text-xl'/></button>
+                  <p>{category.name}</p>
+                  </div>}
                 {!isOpen && (
-                  <span className="absolute left-full ml-2 whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition">
+                  <span className="absolute left-full  whitespace-nowrap rounded bg-black  text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition">
                     {category.name}
                   </span>
                 )}

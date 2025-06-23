@@ -26,7 +26,7 @@ function Navbar() {
     if (response.status === 200) {
       dispatch(setUserLogout());
       toast.success(response.data.message);
-      navigate("/");
+      navigate("/signin");
     }
   };
   return (
@@ -49,7 +49,7 @@ function Navbar() {
               
               className="hover:text-secondary transition text-sm font-semibold"
             >
-             <LiaSignOutAltSolid className='text-xl'/>
+             <LiaSignOutAltSolid className='text-2xl ' title='SignOut'/>
             </button>
             
            ):(

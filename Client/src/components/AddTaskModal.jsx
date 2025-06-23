@@ -226,10 +226,21 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
+
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+
+
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+
+
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../utils/axiosInstance";
 import { fetchTodos } from "../features/todo/todoActions";
 import { setisEdit, setTodos } from "../features/todo/todoSlice";
+
+
+
+
 
 function AddTaskModal({ isOpen, onClose, isEdit, todo }) {
   const dispatch = useDispatch();
@@ -241,19 +252,27 @@ function AddTaskModal({ isOpen, onClose, isEdit, todo }) {
     description: Yup.string().required("Description is required"),
     category: Yup.string().required("Category is required"),
     dueDate: Yup.date().required("Due date is required").nullable(),
+    time:Yup.string().required("Time is required").nullable(),
     priority: Yup.string().required("Priority is required"),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
+    console.log("values",values);
+    const formattedTime = dayjs(values.time).format("HH:mm:ss")
+    
     try {
       let response;
       if (isEdit) {
-        response = await axiosInstance.patch(`/api/todo/edit/${todo.id}`, values);
+        response = await axiosInstance.patch(`/api/todo/edit/${todo.id}`,values);
         if (response.status === 200) {
           dispatch(fetchTodos());
         }
       } else {
-        response = await axiosInstance.post(`/api/todo/add`, values);
+        response = await axiosInstance.post(`/api/todo/add`, 
+          {
+    ...values,
+    time: formattedTime, 
+  })
         if (response.status === 200) {
           dispatch(fetchTodos());
         }
@@ -296,8 +315,10 @@ function AddTaskModal({ isOpen, onClose, isEdit, todo }) {
             title:isEdit? todo.title : "",
             description:isEdit? todo.description : "",
             dueDate:isEdit&& todo.dueDate ? dayjs(todo.dueDate) : null,
+            time:isEdit&& todo.time ? dayjs(todo.time) : null,
             category: isEdit?todo.category : "",
             priority:isEdit? todo.priority : "",
+
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -354,12 +375,35 @@ function AddTaskModal({ isOpen, onClose, isEdit, todo }) {
                     <DatePicker
                       label="Due Date"
                       value={values.dueDate}
+                      name="dueDate"
                       onChange={(date) => setFieldValue("dueDate", date)}
                       className="w-full"
                     />
                   </LocalizationProvider>
                   <ErrorMessage name="dueDate" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
+
+
+
+<div className="mb-4">
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+     
+        <TimePicker 
+        name="time"
+        label="Pick a time" 
+         value={values.time}
+         onChange={(time) => setFieldValue("time", time)}
+                      className="w-full"
+        />
+      
+    </LocalizationProvider>
+     <ErrorMessage name="time" component="div" className="text-red-500 text-sm mt-1" />
+
+</div>
+ 
+
+
+
 
                 {/* Priority */}
                 <p className="text-gray-500 font-medium mb-2 mt-2">Priority</p>

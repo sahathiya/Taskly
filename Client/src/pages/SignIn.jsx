@@ -28,7 +28,7 @@ function SignIn() {
     const user = response.data.user;
     dispatch(setActiveUser(user));
     toast.success(response.data.message);
-    navigate("/dashboard");
+    navigate("/");
   };
 
   return (
