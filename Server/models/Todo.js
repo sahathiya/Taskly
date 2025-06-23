@@ -29,6 +29,9 @@ const Todo = sequelize.define("Todo", {
  dueDate: {
     type: DataTypes.DATEONLY  
   },
+  time:{
+type:DataTypes.TIME
+  },
   status: {
     type: DataTypes.ENUM("Pending", "Completed"),
     defaultValue: "Pending"

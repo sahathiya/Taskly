@@ -3,9 +3,9 @@ const Category=require("../models/Category")
 const AddTodo=async(req,res)=>{
     console.log("gyggggkkk");
     
-    const{title,description,dueDate,priority,category}=req.body
+    const{title,description,dueDate,priority,category,time}=req.body
 
-    if(!title||!description||!dueDate||!priority||!category){
+    if(!title||!description||!dueDate||!priority||!category||!time){
         return res.status(400).json({message:"all fields are required"})
 
     }
@@ -17,6 +17,7 @@ const AddTodo=async(req,res)=>{
         dueDate,
         priority,
         category,
+        time,
         createdAt:Date.now()
 
     })

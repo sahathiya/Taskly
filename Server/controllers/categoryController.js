@@ -23,7 +23,7 @@ const RemoveCategory=async(req,res)=>{
     const categoryId=req.params.id
     const category=await Category.findOne({where:{id:categoryId}})
     if(!category){
-        return  res.status(404).json({message:"todo not found"})
+        return  res.status(404).json({message:"category not found"})
     }
 
     await category.destroy()
